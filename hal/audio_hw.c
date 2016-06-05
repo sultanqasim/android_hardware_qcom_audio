@@ -75,6 +75,11 @@
 
 #include <audio_utils/format.h>
 
+
+#ifdef HTC_AMP_ENABLED
+#include "audio_extn/htc_amp.h"
+#endif
+
 #define COMPRESS_OFFLOAD_NUM_FRAGMENTS 4
 /* ToDo: Check and update a proper value in msec */
 #define COMPRESS_OFFLOAD_PLAYBACK_LATENCY 50
@@ -3452,6 +3457,13 @@ static int adev_open_output_stream(struct audio_hw_device *dev,
         audio_extn_dts_notify_playback_state(out->usecase, 0, out->sample_rate,
                                              popcount(out->channel_mask), out->playback_started);
 
+#ifdef HTC_AMP_ENABLED
+    /* TODO: this is totally the wrong place to do this. Just experimenting */
+    if (htc_tfa_unmute(adev)) {
+        ALOGE("Failed to unmute HTC TFA amplifier");
+    }
+#endif
+
     ALOGV("%s: exit", __func__);
     return 0;
 
@@ -4206,6 +4218,13 @@ static int adev_open(const hw_module_t *module, const char *name,
 
     adev->multi_offload_enable = property_get_bool("audio.offload.multiple.enabled", false);
     pthread_mutex_unlock(&adev_init_lock);
+
+#ifdef HTC_AMP_ENABLED
+    /* TODO: this is totally the wrong place to do this. Just experimenting */
+    if (htc_tfa_init(adev)) {
+        ALOGE("Failed to initialize HTC TFA amplifier");
+    }
+#endif
 
     if (adev->adm_init)
         adev->adm_data = adev->adm_init();
