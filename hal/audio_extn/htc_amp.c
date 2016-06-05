@@ -191,7 +191,7 @@ static void log_traffic(char *buff, unsigned int length, bool good)
     }
     sprintf(logstr + x*3, good ? "good" : "bad");
 
-    ALOGV("%s", logstr);
+    ALOGI("%s", logstr);
 }
 
 static int amp_load_sequence(FILE *seq, int amp_fd)
