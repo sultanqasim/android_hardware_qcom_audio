@@ -227,6 +227,11 @@ ifeq ($(strip $(AUDIO_FEATURE_ENABLED_SOURCE_TRACKING)),true)
     LOCAL_SRC_FILES += audio_extn/source_track.c
 endif
 
+ifeq ($(strip $(AUDIO_FEATURE_ENABLED_HTC_AMP)),true)
+	LOCAL_CFLAGS += -DHTC_AMP_ENABLED
+	LOCAL_SRC_FILES += audio_extn/htc_amp.c
+endif
+
 LOCAL_SHARED_LIBRARIES := \
 	liblog \
 	libcutils \
